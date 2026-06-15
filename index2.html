@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Cửa Hàng Trái Cây - Không Ngon Kệ Mày</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: #f0f9e8;
+            color: #2d4a1e;
+            line-height: 1.4;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+            padding: 1rem 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo h1 {
+            color: #fff9c4;
+            font-size: 1.8rem;
+        }
+        .logo p {
+            font-size: 0.75rem;
+            color: #c8e6c9;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            color: #fff9c4;
+            transition: all 0.25s;
+            border-radius: 40px;
+        }
+        .nav-btn:hover {
+            background: #ffb74d;
+            color: #1b5e20;
+        }
+
+        .action-bar {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .cart-btn, .checkout-btn {
+            border: none;
+            padding: 0.7rem 1.5rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .cart-btn {
+            background: #ffb74d;
+            color: #2d4a1e;
+        }
+        .checkout-btn {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .hero {
+            background: #fff3e0;
+            text-align: center;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .hero h2 {
+            color: #bf5b1c;
+        }
+
+        .products-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem 2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transition: 0.2s;
+            cursor: pointer;
+            border: 1px solid #dcedc8;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .product-img {
+            height: 180px;
+            background: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2e7d32;
+        }
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #e65100;
+            margin: 0.5rem 0;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #f5f5f5;
+            padding: 0.3rem 0.5rem;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 0.5rem 0;
+        }
+        .qty-btn {
+            background: #ffb74d;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+        }
+        .quantity-number {
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+        .total-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1b5e20;
+            margin: 0.5rem 0;
+        }
+        .btn-detail {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 40px;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 550px;
+            max-height: 85vh;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #ffb74d;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .close-modal {
+            font-size: 1.8rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1rem;
+        }
+        .qr-payment {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .qr-payment img {
+            max-width: 220px;
+            border: 2px solid #ddd;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .bank-info {
+            background: #e8f5e9;
+            padding: 0.8rem;
+            border-radius: 0.8rem;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        .payment-method {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 1rem 0;
+        }
+        .confirm-order {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 0.7rem;
+            width: 100%;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2e7d32;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            opacity: 0;
+            transition: 0.2s;
+            z-index: 999;
+        }
+        .footer {
+            background: #1b5e20;
+            color: #c8e6c9;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 600px) {
+            .nav-container { flex-direction: column; gap: 0.5rem; }
+            .action-bar { justify-content: center; }
+        }
+        /* Nút xem thêm */
+        .view-more {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .btn-view-more {
+            background: #ffb74d;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <div class="nav-container">
+        <div class="logo">
+            <h1>🍓Cửa Hàng Trái Cây</h1>
+            <p>Trái cây Việt Nam - Tươi ngon mỗi ngày - Không Ngon Kệ Mày 🍍</p>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn" id="homeBtn">🏠 Trang chủ</button>
+            <button class="nav-btn" id="productsBtn">🍎 Sản phẩm</button>
+            <button class="nav-btn" id="contactBtn">📞 Liên hệ</button>
+        </div>
+    </div>
+</header>
+
+<div class="hero">
+    <h2>🍍 Trái ngon hơn mọi ngày 🥭</h2>
+    <p>Chất lượng đỉnh cao - Giao hàng tận nơi - Không Ngon Kệ Mày 😎</p>
+</div>
+
+<div class="action-bar">
+    <button class="cart-btn" id="viewCartBtn">🛒 Xem giỏ hàng</button>
+    <button class="checkout-btn" id="checkoutBtn">💳 Thanh toán</button>
+</div>
+
+<main>
+    <section class="products-section" id="productsSection">
+        <div class="products-grid" id="productsGrid"></div>
+        <div class="view-more">
+            <button class="btn-view-more" id="viewMoreBtn">🍇 Xem thêm sản phẩm trái cây Việt Nam 🍇</button>
+        </div>
+    </section>
+</main>
+
+<div class="footer" id="footerContact">
+    <h3>📞 Liên hệ</h3>
+    <p>Hotline: 0969 900 376 </p>
+    <p>Email: traicay@khongngon.com<n</p>
+    <p>📍 123 Đường Hoa Quả, Quận Ngon, TP.HCM</p>
+    <p>© 2026  Morning Fruit - ✨ Mở cửa 6h00 - 22h00 tất cả các ngày</p>
+</div>
+
+<!-- Modal giỏ hàng + thanh toán -->
+<div id="cartModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🛍️ Giỏ hàng của bạn</h2>
+            <button class="close-modal" id="closeCartModalBtn">&times;</button>
+        </div>
+        <div id="cartItemsList">Đang tải...</div>
+        <div id="paymentSection" style="display:none;">
+            <div class="payment-method">
+                <h3>💳 Chọn phương thức thanh toán</h3>
+                <label style="display:block; margin:8px 0;">
+                    <input type="radio" name="paymentMethod" value="cod" checked> 🚚 Thanh toán khi nhận hàng (COD)
+                </label>
+                <label style="display:block; margin:8px 0;">
+                    <input type="radio" name="paymentMethod" value="qr"> 📱 Thanh toán bằng mã QR (VietQR - MB Bank)
+                </label>
+                <div id="qrCodeDiv" style="display:none;" class="qr-payment">
+                    <p>🏦 Quét mã QR bên dưới để thanh toán:</p>
+                    <!-- QR CODE THẬT CỦA BẠN - ĐẶT FILE ẢNH CÙNG THƯ MỤC -->
+                    <img src="z7936653577351_41c0df7f71bef10fcd0288ae2bc8b0db.jpg" alt="Mã QR thanh toán MB Bank - Ngô Gia Bảo" onerror="this.src='https://cdn.phototourl.com/free/2026-06-14-d4db2e2a-757b-4b39-951b-e4d4a2b4bd1b.jpg'">
+                    <div class="bank-info">
+                        <strong>📋 Thông tin chuyển khoản:</strong><br>
+                        Ngân hàng: MB Bank (MBBank)<br>
+                        Chủ tài khoản: NGÔ GIA BẢO<br>
+                        Số tài khoản: 0969900376<br>
+                        Nội dung: [SĐT của bạn] + Trái cây ngon
+                    </div>
+                    <p style="font-size:12px; margin-top:5px;">✅ Sau khi thanh toán, vui lòng bấm "Xác nhận đã thanh toán"</p>
+                </div>
+            </div>
+        </div>
+        <button class="confirm-order" id="confirmOrderBtn">✅ Xác nhận đơn hàng</button>
+    </div>
+</div>
+
+<!-- Modal chi tiết sản phẩm -->
+<div id="detailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📋 Chi tiết sản phẩm</h2>
+            <button class="close-modal" id="closeDetailModalBtn">&times;</button>
+        </div>
+        <div id="detailContent"></div>
+    </div>
+</div>
+
+<div id="toastMsg" class="toast-msg">Thông báo</div>
+
+<script>
+    // Danh sách sản phẩm trái cây Việt Nam
+    const productsData = [
+        { id: 1, name: "Dưa lưới mật Amore", price: 115000, unit: "quả", icon: "🍈", image: "https://beanmart.vn/wp-content/uploads/2023/10/trai-cay-nhap-khau-20-1-2.jpg", desc: "Dưa lưới mật Amore thơm ngọt, ruột xanh, xuất khẩu Nhật." },
+        { id: 2, name: "Dừa xiêm gọt trọc", price: 21000, unit: "trái", icon: "🥥", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz_MDKR3NEgmBlqJ11SS_flH9Pu3wufHSHgRFRJuV0Aw&s", desc: "Dừa xiêm tươi, nước ngọt thanh, gọt sạch vỏ." },
+        { id: 3, name: "Điều đỏ", price: 65000, unit: "kg", icon: "🍎", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJPf9MC2lyAuur5og-YewRaS5Une2XoD17q_MP8I8HSQ&s=10", desc: "Trái điều đỏ tươi, giòn, chua ngọt." },
+        { id: 4, name: "Chuối Laba", price: 75000, unit: "nải", icon: "🍌", image: "https://file.hstatic.net/200000377165/file/dac-diem-cua-chuoi-laba_f65e37f0e2664388b36e77de8eb9659b_grande.jpg", desc: "Chuối Laba thơm ngon, vị ngọt đậm." },
+        { id: 5, name: "Dưa hấu có hạt", price: 33000, unit: "kg", icon: "🍉", image: "https://product.hstatic.net/200000604011/product/37af8dcb-04bb-433e-bcaa-3067a5ada9c3_07c6235aa8f74d679c34211e68430427.jfif", desc: "Dưa hấu ruột đỏ, ngọt mát." },
+        { id: 6, name: "Chôm chôm giống Thái", price: 125000, unit: "kg", icon: "🍒", image: "https://file.hstatic.net/200000377165/file/chom-chom-5_grande.jpg", desc: "Chôm chôm Thái, cơm dày, ngọt." },
+        { id: 7, name: "Dưa mật MD2", price: 70000, unit: "kg", icon: "🍈", image: "https://sunrisefruits.vn/wp-content/uploads/2023/07/dua-mat-MD2-4.jpg", desc: "Dưa mật MD2 thơm lừng, cực ngọt." },
+        { id: 8, name: "Vải thiều", price: 185000, unit: "kg", icon: "🍓", image: "https://cdn.tgdd.vn/Files/2022/04/27/1428735/tim-hieu-ve-vai-thieu-phan-loai-tac-dung-bao-nhieu-calo-202204271002528683.jpg", desc: "Vải thiều Lục Ngạn, cùi dày, hạt nhỏ." },
+        { id: 9, name: "Vú Sữa Tím Bách Thảo", price: 175000, unit: "kg", icon: "🍐", image: "https://product.hstatic.net/1000282430/product/vu-sua_3fd1236f72d64841ad0b1700a8a9a3df_master.jpg", desc: "Vú sữa tím thơm, ngọt dịu." },
+        { id: 10, name: "Dưa hấu không hạt", price: 115500, unit: "kg", icon: "🍉", image: "https://product.hstatic.net/200000604011/product/watermelon-picture_012715197_09dfde57dcc04a1eb143570f0297bb20.jpg", desc: "Dưa hấu không hạt, tiện lợi." },
+        { id: 11, name: "Măng cụt Lái Thiều", price: 145000, unit: "kg", icon: "🟣", image: "https://mia.vn/media/uploads/blog-du-lich/mang-cut-lai-thieu-va-niem-tu-hao-cua-nguoi-dan-binh-duong-3-1654597508.jpg", desc: "Măng cụt thơm, vị chua ngọt đặc trưng." },
+        { id: 12, name: "Bơ ống Hoàng Long Khánh", price: 185000, unit: "kg", icon: "🥑", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTY_dNCE6tVdSg19yOu0NvvPsYQbzTxSL4derKC5ExUMNzRy00ufch4PRo7&s=10", desc: "Bơ ống dẻo thơm, giàu dinh dưỡng." }
+    ];
+
+    let quantities = {};
+    productsData.forEach(p => { quantities[p.id] = 0; });
+
+    function formatPrice(price) {
+        return price.toLocaleString('vi-VN') + '₫';
+    }
+
+    function getCartItems() {
+        return productsData.filter(p => quantities[p.id] > 0).map(p => ({
+            ...p, qty: quantities[p.id], total: p.price * quantities[p.id]
+        }));
+    }
+
+    function getCartTotal() {
+        return productsData.reduce((sum, p) => sum + p.price * quantities[p.id], 0);
+    }
+
+    function renderProducts() {
+        const grid = document.getElementById('productsGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        productsData.forEach(p => {
+            const qty = quantities[p.id];
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-img">${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div style="font-size:3rem">${p.icon}</div>`}</div>
+                <div class="product-info">
+                    <div class="product-title">${p.name}</div>
+                    <div class="product-price">${formatPrice(p.price)} / ${p.unit}</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" data-id="${p.id}" data-delta="-1">−</button>
+                        <span class="quantity-number">${qty}</span>
+                        <button class="qty-btn" data-id="${p.id}" data-delta="1">+</button>
+                    </div>
+                    <div class="total-price">💰 Thành tiền: ${formatPrice(p.price * qty)}</div>
+                    <button class="btn-detail" data-id="${p.id}">🔍 Xem chi tiết</button>
+                </div>
+            `;
+            card.addEventListener('click', (e) => {
+                if (e.target.classList?.contains('qty-btn') || e.target.classList?.contains('btn-detail')) return;
+                showProductDetail(p);
+            });
+            grid.appendChild(card);
+        });
+
+        document.querySelectorAll('.qty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                const delta = parseInt(btn.dataset.delta);
+                let newVal = quantities[id] + delta;
+                if (newVal < 0) newVal = 0;
+                quantities[id] = newVal;
+                renderProducts();
+                showToast(newVal > 0 ? `✅ Đã thêm ${productsData.find(p=>p.id===id).name}` : `🗑️ Đã xóa ${productsData.find(p=>p.id===id).name}`);
+            });
+        });
+        document.querySelectorAll('.btn-detail').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                showProductDetail(productsData.find(p=>p.id===id));
+            });
+        });
+    }
+
+    function showProductDetail(p) {
+        const modal = document.getElementById('detailModal');
+        document.getElementById('detailContent').innerHTML = `
+            <div style="text-align:center"><img src="${p.image}" style="max-width:100%; border-radius:1rem"></div>
+            <h3>${p.name}</h3>
+            <div style="color:#e65100; font-size:1.4rem">${formatPrice(p.price)} / ${p.unit}</div>
+            <div style="background:#f1f8e9; padding:0.8rem; border-radius:1rem; margin:1rem 0">${p.desc}</div>
+            <div>Số lượng trong giỏ: <strong>${quantities[p.id]} ${p.unit}</strong></div>
+        `;
+        modal.style.display = 'flex';
+    }
+
+    function renderCartModal(isCheckout = false) {
+        const cartItems = getCartItems();
+        const container = document.getElementById('cartItemsList');
+        if (cartItems.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:2rem">🛒 Giỏ hàng trống</div>';
+            document.getElementById('paymentSection').style.display = 'none';
+        } else {
+            let html = '';
+            cartItems.forEach(item => {
+                html += `<div class="cart-item"><span>${item.icon} ${item.name}</span><span>${item.qty} ${item.unit} × ${formatPrice(item.price)} = <strong>${formatPrice(item.total)}</strong></span></div>`;
+            });
+            html += `<div class="cart-total">Tổng cộng: ${formatPrice(getCartTotal())}</div>`;
+            container.innerHTML = html;
+            document.getElementById('paymentSection').style.display = 'block';
+        }
+        document.getElementById('cartModal').style.display = 'flex';
+        
+        // Xử lý hiển thị QR khi chọn phương thức
+        const qrDiv = document.getElementById('qrCodeDiv');
+        const radios = document.querySelectorAll('input[name="paymentMethod"]');
+        radios.forEach(radio => {
+            radio.removeEventListener('change', () => {});
+            radio.addEventListener('change', () => {
+                if (document.querySelector('input[name="paymentMethod"]:checked')?.value === 'qr') {
+                    qrDiv.style.display = 'block';
+                } else {
+                    qrDiv.style.display = 'none';
+                }
+            });
+        });
+        if (document.querySelector('input[name="paymentMethod"]:checked')?.value === 'qr') {
+            qrDiv.style.display = 'block';
+        } else {
+            qrDiv.style.display = 'none';
+        }
+    }
+
+    function checkout() {
+        const cartItems = getCartItems();
+        if (cartItems.length === 0) {
+            showToast("❌ Giỏ hàng trống, vui lòng chọn sản phẩm");
+            return;
+        }
+        const method = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+        const total = getCartTotal();
+        let message = `✅ ĐẶT HÀNG THÀNH CÔNG!\n\n📦 Sản phẩm:\n${cartItems.map(i => `- ${i.name}: ${i.qty} ${i.unit}`).join('\n')}\n💰 Tổng tiền: ${formatPrice(total)}\n`;
+        
+        if (method === 'cod') {
+            message += `\n🚚 Phương thức: Thanh toán khi nhận hàng (COD)\n📞 Chúng tôi sẽ gọi xác nhận và giao hàng trong 24h.\nCảm ơn bạn!`;
+            alert(message);
+            resetCart();
+        } else {
+            message += `\n📱 Phương thức: Thanh toán qua mã QR (MB Bank - Ngô Gia Bảo)\n🏦 Ngân hàng: MB Bank\n👤 Chủ TK: NGÔ GIA BẢO\n🔢 STK: 0969900376\n💸 Số tiền: ${formatPrice(total)}\n📝 Nội dung: [SĐT của bạn] MorningFruit\n\n✅ Sau khi chuyển khoản thành công, vui lòng thông báo qua hotline 0969900376 để xác nhận đơn hàng.`;
+            alert(message);
+            resetCart();
+        }
+        document.getElementById('cartModal').style.display = 'none';
+    }
+
+    function resetCart() {
+        productsData.forEach(p => { quantities[p.id] = 0; });
+        renderProducts();
+        showToast("🎉 Đơn hàng đã được ghi nhận! Cảm ơn bạn!");
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toastMsg');
+        toast.textContent = msg;
+        toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', 2500);
+    }
+
+    function setupNav() {
+        document.getElementById('homeBtn')?.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+        document.getElementById('productsBtn')?.addEventListener('click', () => document.getElementById('productsSection').scrollIntoView({behavior:'smooth'}));
+        document.getElementById('contactBtn')?.addEventListener('click', () => document.getElementById('footerContact').scrollIntoView({behavior:'smooth'}));
+        document.getElementById('viewCartBtn')?.addEventListener('click', () => renderCartModal(false));
+        document.getElementById('checkoutBtn')?.addEventListener('click', () => renderCartModal(true));
+        document.getElementById('confirmOrderBtn')?.addEventListener('click', checkout);
+        document.getElementById('closeCartModalBtn')?.addEventListener('click', () => document.getElementById('cartModal').style.display = 'none');
+        document.getElementById('closeDetailModalBtn')?.addEventListener('click', () => document.getElementById('detailModal').style.display = 'none');
+        document.getElementById('viewMoreBtn')?.addEventListener('click', () => {
+            showToast("🍇 Cảm ơn bạn đã quan tâm! Hãy liên hệ hotline để được tư vấn thêm.");
+        });
+        window.onclick = (e) => {
+            if (e.target === document.getElementById('cartModal')) document.getElementById('cartModal').style.display = 'none';
+            if (e.target === document.getElementById('detailModal')) document.getElementById('detailModal').style.display = 'none';
+        };
+    }
+
+    renderProducts();
+    setupNav();
+</script>
+</body>
+</html>
